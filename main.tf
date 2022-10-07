@@ -5,6 +5,20 @@ resource "aws_vpc" "vpc_main" {
   }
 }
 
+resource "aws_eip" "web" {
+  network_interface = aws_network_interface.web.id
+  tags = {
+    Name = "midterm-web-eip"
+  }
+}
+
+resource "aws_eip" "nat" {
+  network_interface = aws_network_interface.nat.id
+  tags = {
+    Name = "midterm-nat-eip"
+  }
+}
+
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.vpc_main.id
 
