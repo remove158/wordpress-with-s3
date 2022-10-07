@@ -5,6 +5,11 @@ resource "aws_vpc" "vpc_main" {
   }
 }
 
+resource "aws_key_pair" "key_auth" {
+  key_name   = "sds-midterm"
+  public_key = file("~/.ssh/id_ed25519.pub")
+}
+
 resource "aws_eip" "web" {
   network_interface = aws_network_interface.web.id
   tags = {
@@ -198,6 +203,24 @@ resource "aws_security_group" "db" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  tags = {
+    Name = "db"
+  }
+}
+
+resource "aws_instance" "web" {
+  ami           = var.ami
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "web"
+  }
+}
+
+resource "aws_instance" "db" {
+  ami           = var.ami
+  instance_type = "t2.micro"
+
   tags = {
     Name = "db"
   }
