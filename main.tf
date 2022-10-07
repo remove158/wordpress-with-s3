@@ -65,6 +65,41 @@ resource "aws_route_table" "to_igw" {
   }
 }
 
+resource "aws_network_interface" "web" {
+  subnet_id       = aws_subnet.subnet_public_1.id
+  security_groups = [aws_security_group.web.id]
+
+  tags = {
+    Name = "web"
+  }
+}
+
+resource "aws_network_interface" "web_db" {
+  subnet_id       = aws_subnet.subnet_private_1.id
+  security_groups = [aws_security_group.web_db.id]
+
+  tags = {
+    Name = "web_db"
+  }
+}
+
+resource "aws_network_interface" "db" {
+  subnet_id       = aws_subnet.subnet_private_2.id
+  security_groups = [aws_security_group.db.id]
+
+  tags = {
+    Name = "db"
+  }
+}
+
+resource "aws_network_interface" "nat" {
+  subnet_id = aws_subnet.subnet_public_2.id
+
+  tags = {
+    Name = "nat"
+  }
+}
+
 resource "aws_route_table" "to_nat" {
   vpc_id = aws_vpc.vpc_main.id
   route {
