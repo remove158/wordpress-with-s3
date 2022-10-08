@@ -29,9 +29,7 @@ define( 'AS3CF_SETTINGS', serialize( array(
 PHP
 sudo -u www-data wp core install  --title="6231339321 Wordpress" --url=${web_public_ip} --admin_user=${admin_user} --admin_password=${admin_pass} --admin_email=remove158@gmail.com --skip-email --path=/var/www/html
 
-
-sudo rm -rf /var/www/html/index.html
-# complete 5-minute wordpress install
-
 sudo -u www-data wp plugin install amazon-s3-and-cloudfront  --path=/var/www/html
 sudo -u www-data wp plugin activate amazon-s3-and-cloudfront  --path=/var/www/html
+
+sudo rm -rf /var/www/html/index.html

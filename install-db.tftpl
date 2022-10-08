@@ -6,12 +6,14 @@ sudo apt install -y mariadb-server
 # allow remote connections
 echo "[mysqld]" | sudo tee -a /etc/mysql/my.cnf
 echo "bind-address = 0.0.0.0" | sudo tee -a /etc/mysql/my.cnf
-sudo systemctl restart mariadb
+sudo systemctl start mariadb
 
 # create db user
 sudo mysql << EOF
 CREATE DATABASE ${database_name};
-CREATE USER ${database_user}@'%' IDENTIFIED BY '${database_pass}';
-GRANT ALL ON ${database_name}.* TO ${database_user}@'%';
+CREATE USER '${database_user}'@'%' IDENTIFIED BY '${database_pass}';
+GRANT ALL ON ${database_name}.* TO '${database_user}'@'%';
 FLUSH PRIVILEGES;
 EOF
+
+sudo systemctl restart mariadb
