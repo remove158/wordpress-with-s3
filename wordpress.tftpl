@@ -1,0 +1,37 @@
+#! /bin/bash
+# install dependencies
+sudo apt update
+sudo apt install -y apache2 php-cli php-fpm php  php-mysql php-json php-opcache php-mbstring php-xml php-gd php-curl mariadb-client-core-10.3
+sudo systemctl start apache2
+sudo systemctl enable apache2
+
+# install wordpress CLI
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar
+sudo mv wp-cli.phar /usr/local/bin/wp
+
+# install wordpress core via CLI
+sudo mkdir -p /var/www/html
+sudo chown -R www-data: /var/www
+sudo -u www-data wp core download --path=/var/www/html
+sudo -u www-data wp config create --dbname=${database_name} --dbuser=${database_user} --dbpass=${database_pass} --dbhost=${database_host} --path=/var/www/html --extra-php <<PHP
+define('FS_METHOD', 'direct' );
+define('WP_MEMORY_LIMIT', '256M');
+define( 'AS3CF_SETTINGS', serialize( array(
+	'provider' => 'aws',
+	'use-server-roles' => true,
+	'bucket' => '${bucket_name}',
+    'region' => '',
+	'copy-to-s3' => true,
+	'serve-from-s3' => true,
+	'remove-local-file' => true,
+) ) );
+PHP
+sudo -u www-data wp core install  --title="6231339321 Wordpress" --url=${web_public_ip} --admin_user=${admin_user} --admin_password=${admin_pass} --admin_email=remove158@gmail.com --skip-email --path=/var/www/html
+
+
+sudo rm -rf /var/www/html/index.html
+# complete 5-minute wordpress install
+
+sudo -u www-data wp plugin install amazon-s3-and-cloudfront  --path=/var/www/html
+sudo -u www-data wp plugin activate amazon-s3-and-cloudfront  --path=/var/www/html
