@@ -333,5 +333,7 @@ resource "aws_s3_bucket_acl" "bucket" {
 resource "aws_iam_role_policy" "web_iam_role_policy" {
   name   = "web_iam_role_policy"
   role   = aws_iam_role.web_iam_role.id
-  policy = (file("iam_role_policy.json"))
+  policy = (templatefile("iam_role_policy.tftpl",{
+	bucket_name = var.bucket_name
+  }))
 }
